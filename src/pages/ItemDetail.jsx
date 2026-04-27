@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Star, MapPin, Calendar, Shield, Sparkles, CheckCircle, X, ChevronLeft, ChevronRight, Heart } from 'lucide-react';
+import { ArrowLeft, Star, MapPin, Calendar, Shield, Sparkles, CheckCircle, X, ChevronLeft, ChevronRight, Heart, Camera } from 'lucide-react';
 import { useData } from '../context/DataContext';
 import { useAuth } from '../context/AuthContext';
+import TryOnModal from '../components/TryOnModal';
 
 export default function ItemDetail() {
   const { id } = useParams();
@@ -17,6 +18,7 @@ export default function ItemDetail() {
   const [bookingSubmitted, setBookingSubmitted] = useState(false);
   const [bookingError, setBookingError] = useState('');
   const [wishlist, setWishlist] = useState(false);
+  const [tryOnOpen, setTryOnOpen] = useState(false);
 
   if (!item) {
     return (
@@ -69,6 +71,7 @@ export default function ItemDetail() {
   const images = item.images.length > 0 ? item.images : ['https://images.unsplash.com/photo-1599643477877-530eb83abc8e?w=800&q=80'];
 
   return (
+    <>
     <div className="min-h-screen bg-white">
       {/* Back nav */}
       <div className="max-w-7xl mx-auto px-6 py-4">
@@ -193,6 +196,15 @@ export default function ItemDetail() {
               </div>
             </div>
 
+            {/* Try-On CTA */}
+            <button
+              onClick={() => setTryOnOpen(true)}
+              className="w-full mb-5 flex items-center justify-center gap-2.5 py-3.5 rounded-2xl border-2 border-dashed border-yellow-400 bg-yellow-50 text-yellow-700 font-semibold text-sm hover:bg-yellow-100 transition-colors group"
+            >
+              <Camera size={18} className="group-hover:scale-110 transition-transform" />
+              Try On Virtually — Use Your Camera
+            </button>
+
             {/* Pricing */}
             <div className="bg-gray-50 rounded-2xl p-5 mb-6">
               <div className="flex items-baseline gap-2 mb-1">
@@ -311,5 +323,11 @@ export default function ItemDetail() {
         </div>
       </div>
     </div>
+
+    {/* Try-On Modal */}
+    {tryOnOpen && (
+      <TryOnModal item={item} onClose={() => setTryOnOpen(false)} />
+    )}
+    </>
   );
 }
